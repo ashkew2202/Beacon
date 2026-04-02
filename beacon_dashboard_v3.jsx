@@ -87,15 +87,32 @@ const Icon = ({ name, size = 16, color = "currentColor", strokeWidth = 1.6 }) =>
 // ─── Beacon Logo (SVG recreation from image) ──────────────────────────────────
 const BeaconWordmark = ({ dark = false, size = 1 }) => {
   const fg = dark ? "#e8ede4" : "#4a5a40";
-  const accent = dark ? "#8a9e80" : "#6b8060";
+  const accent = dark ? "#8aae90" : "#6b8060";
+  // Wifi arcs anchored at bottom-left of the icon group, radiating upper-right ~45deg
+  // Origin point (ox, oy) sits just above the top-right of the "n"
+  const ox = 117, oy = 18;
   return (
-    <svg width={160 * size} height={44 * size} viewBox="0 0 160 44" fill="none">
-      <rect width="160" height="44" rx="8" fill={dark ? "#2a3a2e" : "#dce8d4"} />
-      <text x="12" y="30" fontFamily="Georgia, 'Times New Roman', serif" fontWeight="700" fontSize="24" fill={fg} letterSpacing="-0.5">Beacon</text>
-      {/* Wifi arcs — top right of text */}
-      <circle cx="132" cy="26" r="2.2" fill={accent} />
-      <path d="M127 22 Q132 17 137 22" stroke={accent} strokeWidth="2" fill="none" strokeLinecap="round"/>
-      <path d="M124 18.5 Q132 12 140 18.5" stroke={accent} strokeWidth="2" fill="none" strokeLinecap="round" opacity="0.7"/>
+    <svg width={148 * size} height={38 * size} viewBox="0 0 148 38" fill="none">
+      <text
+        x="4" y="30"
+        fontFamily="Georgia, 'Times New Roman', serif"
+        fontWeight="700"
+        fontSize="26"
+        fill={fg}
+        letterSpacing="-0.3"
+      >Beacon</text>
+      {/* Dot — the origin / innermost point */}
+      <circle cx={ox} cy={oy} r="2" fill={accent}/>
+      {/* Inner arc — small radius, sweeping upper-right */}
+      <path
+        d={`M${ox - 1} ${oy - 5.5} A6 6 0 0 1 ${ox + 5.5} ${oy + 1}`}
+        stroke={accent} strokeWidth="2" fill="none" strokeLinecap="round"
+      />
+      {/* Outer arc — larger radius */}
+      <path
+        d={`M${ox - 2} ${oy - 10} A11 11 0 0 1 ${ox + 10} ${oy + 2}`}
+        stroke={accent} strokeWidth="1.8" fill="none" strokeLinecap="round" opacity="0.65"
+      />
     </svg>
   );
 };
@@ -1179,12 +1196,13 @@ export default function BeaconApp() {
         <div style={{ width: sidebar ? 234 : 58, background: "#1a2820", display: "flex", flexDirection: "column", transition: "width 0.28s ease", overflow: "hidden", flexShrink: 0, zIndex: 10 }}>
           {/* Logo */}
           <div style={{ padding: sidebar ? "18px 14px 14px" : "18px 10px 14px", borderBottom: "1px solid rgba(255,255,255,0.07)", display: "flex", alignItems: "center", justifyContent: sidebar ? "space-between" : "center" }}>
-            {sidebar ? <BeaconWordmark dark size={0.72}/> : (
-              <svg width="32" height="32" viewBox="0 0 140 44" fill="none">
-                <rect width="140" height="44" rx="8" fill="#2a3a2e"/>
-                <circle cx="70" cy="22" r="8" fill="#e8ede4" opacity="0.9"/>
-                <path d="M60 18 Q70 10 80 18" stroke="#8a9e80" strokeWidth="2.5" fill="none" strokeLinecap="round"/>
-                <path d="M56 14 Q70 4 84 14" stroke="#8a9e80" strokeWidth="2" fill="none" strokeLinecap="round" opacity="0.6"/>
+            {sidebar ? <BeaconWordmark dark size={0.78}/> : (
+              <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+                <text x="2" y="22" fontFamily="Georgia,'Times New Roman',serif" fontWeight="700" fontSize="20" fill="#e8ede4">B</text>
+                {/* Tilted wifi arcs, upper-right of B */}
+                <circle cx="19" cy="8" r="1.8" fill="#8aae90"/>
+                <path d="M18 3.5 A5.5 5.5 0 0 1 23.5 9" stroke="#8aae90" strokeWidth="1.8" fill="none" strokeLinecap="round"/>
+                <path d="M16.5 1 A9.5 9.5 0 0 1 27 9.5" stroke="#8aae90" strokeWidth="1.6" fill="none" strokeLinecap="round" opacity="0.6"/>
               </svg>
             )}
             <button onClick={() => setSidebar(s => !s)} style={{ background: "none", border: "none", color: "rgba(255,255,255,0.4)", cursor: "pointer", padding: 4, display: "flex" }}>
